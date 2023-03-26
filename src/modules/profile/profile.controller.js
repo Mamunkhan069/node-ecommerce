@@ -38,8 +38,9 @@ async function getProfiles(req, res) {
 
 async function getProfile(req, res) {
     try {
+        console.log("........get Profile is called..........", req.params.id);
         const profile = await Profile.findOne({
-            where: { profile_name: req.params.profile_name },
+            where: { id: req.params.id },
         });
         if (!profile) return res.status(404).send("Profile not found");
         res.status(200).send(profile);
@@ -71,8 +72,9 @@ async function updateProfile(req, res) {
     }
 }
 
-async function findProfile(id) {
+async function findProfile(req, res) {
     try {
+        const { id } = req.params;
         const user = await User.findOne({
             where: { id: id },
         });
@@ -86,6 +88,7 @@ async function findProfile(id) {
 async function deleteProfile(req, res) {
     try {
         const { id } = req.params;
+        console.log(id);
 
         const profile = await Profile.findOne({ where: { id } });
         if (!profile) return res.status(404).send("Profile not found");

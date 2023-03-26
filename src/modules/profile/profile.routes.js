@@ -6,17 +6,19 @@ const {
     deleteProfile,
 } = require("./profile.controller");
 const validate = require("../core/middlewires/validate");
-const { createProfileSchema } = require("./profile.schema");
+const {
+    createProfileSchema,
+    updateProfileSchema,
+} = require("./profile.schema");
 const AuthStrategy = require("../user/user-authentication.middleware");
 
 module.exports = (app) => {
     app.route("/profiles")
-        .post(validate(createProfileSchema), createProfile)
-        .get(getProfiles);
+        .post(AuthStrategy, validate(createProfileSchema), createProfile)
+        .get(AuthStrategy, getProfiles);
 
     app.route("/profile/:id")
-        .patch(AuthStrategy, updateProfile)
-        .delete(deleteProfile);
-
-    app.route("/profiles/:profile_name").get(AuthStrategy, getProfile);
+        .patch(AuthStrategy, validate(updateProfile), updateProfile)
+        .delete(AuthStrategy, deleteProfile)
+        .get(AuthStrategy, getProfile);
 };
